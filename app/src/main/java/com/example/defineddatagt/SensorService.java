@@ -97,14 +97,13 @@ public class SensorService extends Service implements SensorEventListener {
             s.append(Float.toString(gx) + ",");
             s.append(Float.toString(gy) + ",");
             s.append(Float.toString(gz) + ",");
-            s.append(";");
         }
 
         if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             x = sensorEvent.values[0];
             y = sensorEvent.values[1];
             z = sensorEvent.values[2];
-            s.append("accelerometer;");
+            s.append("accelerometer,");
             s.append(Float.toString(x) + ",");
             s.append(Float.toString(y) + ",");
             s.append(Float.toString(z) + ",");
@@ -114,7 +113,7 @@ public class SensorService extends Service implements SensorEventListener {
             mx = sensorEvent.values[0];
             my = sensorEvent.values[1];
             mz = sensorEvent.values[2];
-            s.append("MagneticField;");
+            s.append("MagneticField,");
             s.append(Float.toString(mx) + ",");
             s.append(Float.toString(my) + ",");
             s.append(Float.toString(mz) + ",");
@@ -124,7 +123,7 @@ public class SensorService extends Service implements SensorEventListener {
             gyx = sensorEvent.values[0];
             gyy = sensorEvent.values[1];
             gyz = sensorEvent.values[2];
-            s.append("Gravity;");
+            s.append("Gravity,");
             s.append(Float.toString(gyx) + ",");
             s.append(Float.toString(gyy) + ",");
             s.append(Float.toString(gyz) + ",");
