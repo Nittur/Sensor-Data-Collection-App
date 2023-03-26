@@ -15,8 +15,6 @@ import androidx.annotation.Nullable;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
@@ -46,6 +44,7 @@ public class SensorService extends Service implements SensorEventListener {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        MainActivity.numpadText = new StringBuilder("");
         Toast.makeText(this, "Service started by user.", Toast.LENGTH_LONG).show();
         startTime = System.currentTimeMillis();
         Log.d(TAG, "onStartCommand at " + startTime);
@@ -80,6 +79,7 @@ public class SensorService extends Service implements SensorEventListener {
      */
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
+
         Sensor mySensor = sensorEvent.sensor;
         Sensor GSensor = sensorEvent.sensor;
         Sensor MSensor = sensorEvent.sensor;
@@ -93,12 +93,10 @@ public class SensorService extends Service implements SensorEventListener {
             gx = sensorEvent.values[0];
             gy = sensorEvent.values[1];
             gz = sensorEvent.values[2];
-            s.append("gyroscope;");
-            s.append(Float.toString(gx));
-            s.append(";");
-            s.append(Float.toString(gy));
-            s.append(";");
-            s.append(Float.toString(gz));
+            s.append("gyroscope,");
+            s.append(Float.toString(gx) + ",");
+            s.append(Float.toString(gy) + ",");
+            s.append(Float.toString(gz) + ",");
             s.append(";");
         }
 
@@ -107,12 +105,9 @@ public class SensorService extends Service implements SensorEventListener {
             y = sensorEvent.values[1];
             z = sensorEvent.values[2];
             s.append("accelerometer;");
-            s.append(Float.toString(x));
-            s.append(";");
-            s.append(Float.toString(y));
-            s.append(";");
-            s.append(Float.toString(z));
-            s.append(";");
+            s.append(Float.toString(x) + ",");
+            s.append(Float.toString(y) + ",");
+            s.append(Float.toString(z) + ",");
         }
 
         if(MSensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
@@ -120,12 +115,9 @@ public class SensorService extends Service implements SensorEventListener {
             my = sensorEvent.values[1];
             mz = sensorEvent.values[2];
             s.append("MagneticField;");
-            s.append(Float.toString(mx));
-            s.append(";");
-            s.append(Float.toString(my));
-            s.append(";");
-            s.append(Float.toString(mz));
-            s.append(";");
+            s.append(Float.toString(mx) + ",");
+            s.append(Float.toString(my) + ",");
+            s.append(Float.toString(mz) + ",");
         }
 
         if(GySensor.getType() == Sensor.TYPE_GRAVITY) {
@@ -133,15 +125,12 @@ public class SensorService extends Service implements SensorEventListener {
             gyy = sensorEvent.values[1];
             gyz = sensorEvent.values[2];
             s.append("Gravity;");
-            s.append(Float.toString(gyx));
-            s.append(";");
-            s.append(Float.toString(gyy));
-            s.append(";");
-            s.append(Float.toString(gyz));
-            s.append(";");
+            s.append(Float.toString(gyx) + ",");
+            s.append(Float.toString(gyy) + ",");
+            s.append(Float.toString(gyz) + ",");
         }
 
-        long currentTime = System.currentTimeMillis();
+        long currentTime = System.nanoTime();
         s.append(Long.toString(currentTime));
         //Log.d(TAG, String.valueOf(s));
 
@@ -161,13 +150,14 @@ public class SensorService extends Service implements SensorEventListener {
         Log.d(TAG + "values size", Integer.toString(values.size()));
         try {
 
-            File file = new File(this.getFilesDir(), mode+"_"+Long.toString(startTime) + ".csv");
+            File file = new File(this.getFilesDir(), mode+"_"+MainActivity.numpadText.toString()+"_"+Long.toString(startTime) + ".csv");
             // if file doesnt exists, then create it
             if (!file.exists()) {
                 file.createNewFile();
             }
             OutputStream os = new FileOutputStream(file);
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os));
+            bw.write("\"Sensor\",\"X\",\"Y\",\"Z\",\"timestamp\"\n");
             for (int i = 0; i < values.size(); i++) {
                 bw.write(String.valueOf(values.get(i)));
                 bw.write("\n");

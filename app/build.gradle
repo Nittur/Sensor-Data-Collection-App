@@ -5,13 +5,14 @@ plugins {
 android {
     namespace 'com.example.defineddatagt'
     compileSdk 33
+    archivesBaseName = "DefinedDataGT"
 
     defaultConfig {
         applicationId "com.example.defineddatagt"
         minSdk 31
         targetSdk 33
         versionCode 1
-        versionName "1.0"
+        versionName "2.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
